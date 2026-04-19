@@ -1,274 +1,283 @@
-# nmap-recon-analysis
 
-This project demonstrates practical network reconnaissance and analysis skills using Nmap, focusing on real-world interpretation of scan results.
+🔍 Advanced Nmap Network Reconnaissance & Security Analysis
 
-# 🔍 Advanced Nmap Network Reconnaissance Analysis
+📌 Overview
 
-## 📌 Overview
+This project demonstrates a comprehensive network reconnaissance and security analysis conducted using Nmap against an authorized target (scanme.nmap.org).
 
-This project demonstrates a detailed network reconnaissance process using Nmap against an authorized target (`scanme.nmap.org`). The objective is not only to run scans but to **analyze and interpret the results** in order to understand the system’s attack surface.
+The objective is not just to scan ports, but to:
 
----
-
-## 🎯 Objectives
-
-* Perform stealth network scanning
-* Identify open, filtered, and protected ports
-* Detect running services and versions
-* Analyze NSE script outputs
-* Perform OS fingerprinting
-* Evaluate potential security risks
+- Identify and analyze exposed services
+- Detect potential vulnerabilities
+- Map realistic attack paths from an attacker’s perspective
 
 ---
 
-## ⚙️ Command Used
+🎯 Objectives
 
-```bash
+- Perform stealth (SYN) network scanning
+- Identify open, filtered, and closed ports
+- Detect running services and versions
+- Analyze NSE script outputs
+- Conduct OS fingerprinting
+- Map CVEs and potential exploits
+- Model the attack surface
+
+---
+
+⚙️ Commands Used
+
 nmap -sS -sV -O -sC scanme.nmap.org
-```
+nmap --script vuln scanme.nmap.org
 
 ---
 
-## 📊 Full Scan Output (Raw)
+📊 Scan Summary
 
-```
-Starting Nmap 7.95 ( https://nmap.org ) at 2026-04-19 08:29 EDT
-Nmap scan report for scanme.nmap.org (45.33.32.156)
-Host is up (0.21s latency).
-Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
-Not shown: 995 closed tcp ports (reset)
-
-PORT      STATE    SERVICE    VERSION
-22/tcp    open     ssh        OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.13 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey:
-|   1024 ac:00:a0:1a:82:ff:cc:55:99:dc:67:2b:34:97:6b:75 (DSA)
-|   2048 20:3d:2d:44:62:2a:b0:5a:9d:b5:b3:05:14:c2:a6:b2 (RSA)
-|   256 96:02:bb:5e:57:54:1c:4e:45:2f:56:4c:4a:24:b2:57 (ECDSA)
-|_  256 33:fa:91:0f:e0:e1:7b:1f:6d:05:a2:b0:f1:54:41:56 (ED25519)
-
-25/tcp    filtered smtp
-
-80/tcp    open     http       Apache httpd 2.4.7 ((Ubuntu))
-|_http-favicon: Nmap Project
-|_http-server-header: Apache/2.4.7 (Ubuntu)
-|_http-title: Go ahead and ScanMe!
-
-9929/tcp  open     nping-echo
-
-31337/tcp open     tcpwrapped
-
-Aggressive OS guesses: Linux 4.19 - 5.15 (97%), Linux 4.15 (94%), Linux 5.4 (93%)
-No exact OS matches for host (test conditions non-ideal).
-
-Network Distance: 24 hops
-Service Info: OS: Linux
-```
+Port| State| Service| Version
+22| open| SSH| OpenSSH 6.6.1
+25| filtered| SMTP| -
+80| open| HTTP| Apache 2.4.7
+9929| open| nping-echo| -
+31337| open| tcpwrapped| -
 
 ---
 
-# 🔍 Detailed Technical Analysis
+🔍 Technical Analysis
+
+🖥️ Host & Network Context
+
+- Host is up (0.21s latency)
+- Dual-stack (IPv4 & IPv6)
+- Network distance: 24 hops
+- OS guess: Linux (kernel 4.x – 5.x)
+
+👉 Insight: Likely hosted in a cloud-based infrastructure.
 
 ---
 
-## 🖥️ Host Availability & Network Context
+🔐 Port & Service Analysis
 
-* **Host Status:** Up and reachable
-* **Latency:** 0.21 seconds → moderate network delay
-* **IPv6 Address Present:** Indicates dual-stack network support
-* **Network Distance:** 24 hops → relatively distant system
+🔹 22/tcp — SSH
 
-👉 Interpretation:
-The host is accessible over the network, but not in close proximity, suggesting it is likely hosted remotely (e.g., cloud infrastructure).
+Service: OpenSSH 6.6.1 (Ubuntu)
 
----
+🧠 Analysis
 
-## 🔐 Port & Service Analysis
+- Outdated SSH version
+- Remote access enabled
 
----
+🚨 Potential Vulnerabilities
 
-### 🔹 Port 22 — SSH (Remote Access Service)
+- User enumeration
+- Brute-force attacks
+- Weak cryptographic configurations
 
-```
-22/tcp open ssh OpenSSH 6.6.1p1 Ubuntu
-```
+🔎 Relevant CVEs
 
-#### Analysis:
+- CVE-2015-5600 → brute-force mitigation bypass
+- CVE-2016-6210 → user enumeration
 
-* SSH is exposed → remote login possible
-* Version: **OpenSSH 6.6.1 (older release)**
-* Multiple host keys detected (DSA, RSA, ECDSA, ED25519)
+🎯 Attacker Perspective
 
-#### Security Insight:
-
-* Older SSH versions may contain known vulnerabilities
-* Possible attack vectors:
-
-  * Brute-force attempts
-  * Exploitation of outdated cryptographic implementations
-
-👉 This port represents a **high-value attack surface**
+- Password brute-force using Hydra
+- Credential stuffing
+- Banner grabbing for fingerprinting
 
 ---
 
-### 🔹 Port 25 — SMTP (Filtered)
+🔹 25/tcp — SMTP (Filtered)
 
-```
-25/tcp filtered smtp
-```
+🧠 Analysis
 
-#### Analysis:
+- Service exists but is filtered by firewall
+- External access restricted
 
-* SMTP service exists but is **not directly accessible**
-* Traffic is being filtered (likely firewall)
+🔐 Security Insight
 
-#### Security Insight:
-
-* Indicates presence of **network security controls**
-* Service may still be reachable internally or under certain conditions
-
-👉 Suggests **defensive configuration is in place**
+- Indicates defensive filtering
+- Internal relay or misconfiguration may still exist
 
 ---
 
-### 🔹 Port 80 — HTTP (Web Server)
+🔹 80/tcp — HTTP
 
-```
-80/tcp open http Apache httpd 2.4.7 (Ubuntu)
-```
+Service: Apache 2.4.7
 
-#### NSE Output:
+🧠 Analysis
 
-* Server header: Apache/2.4.7
-* Page title: "Go ahead and ScanMe!"
-* Favicon identified
+- Public-facing web server
+- Outdated version
 
-#### Analysis:
+🚨 Potential Vulnerabilities
 
-* Web server is publicly accessible
-* Apache version **2.4.7 is outdated**
+- Directory traversal
+- Misconfiguration issues
+- Information disclosure
 
-#### Security Insight:
+🔎 Relevant CVEs
 
-* Potential vulnerabilities may exist in older Apache versions
-* Possible attack vectors:
-
-  * Directory traversal
-  * Misconfiguration exploitation
-  * Web application vulnerabilities
-
-👉 This is a **primary attack surface**
+- CVE-2017-15715
+- CVE-2019-0211 (privilege escalation)
 
 ---
 
-### 🔹 Port 9929 — Nping Echo Service
+🌐 Web Enumeration
 
-```
-9929/tcp open nping-echo
-```
+Tools Used:
 
-#### Analysis:
+gobuster dir -u http://scanme.nmap.org -w /usr/share/wordlists/dirb/common.txt
+nikto -h http://scanme.nmap.org
+whatweb http://scanme.nmap.org
 
-* Uncommon service
-* Used for network testing/debugging
+🎯 Purpose:
 
-#### Security Insight:
-
-* Rarely used in production
-* Could indicate:
-
-  * Testing environment
-  * Misconfiguration
-
-👉 Requires further investigation
+- Discover hidden directories
+- Identify technologies
+- Detect known vulnerabilities
 
 ---
 
-### 🔹 Port 31337 — tcpwrapped
+🔹 9929/tcp — Nping Echo
 
-```
-31337/tcp open tcpwrapped
-```
+🧠 Analysis
 
-#### Analysis:
+- Debugging/testing service
+- Rarely used in production
 
-* Connection is controlled or restricted
-* Likely protected by access rules or wrappers
+🚨 Risk
 
-#### Security Insight:
-
-* Service exists but **access is limited**
-* Could be:
-
-  * Admin service
-  * Hidden backend service
-
-👉 Indicates **restricted exposure**
+- Information leakage
+- Network mapping opportunities
 
 ---
 
-# 🧠 OS Detection Analysis
+🔹 31337/tcp — tcpwrapped
 
-```
-Aggressive OS guesses: Linux 4.x – 5.x
-```
+🧠 Analysis
 
-#### Interpretation:
+- Access is restricted or filtered
+- Service likely protected by access control
 
-* System is **Linux-based**
-* Kernel range identified (but not exact version)
+🎯 Possibilities
 
-#### Important Note:
-
-* OS detection is probabilistic
-* “No exact match” is normal in real-world scans
-
-👉 Still sufficient for:
-
-* exploit research
-* attack planning
+- Administrative service
+- Internal tool
+- Hidden backend service
 
 ---
 
-# 🔐 Overall Security Assessment
+🧠 OS Detection Analysis
 
-The target system exposes multiple services, including SSH and HTTP, which represent primary entry points. The detected service versions (OpenSSH 6.6.1 and Apache 2.4.7) are outdated and may contain known vulnerabilities.
+- Linux kernel range: 4.x – 5.x
+- No exact match found
 
-The presence of:
+❗ Reasons
 
-* **Filtered ports** → indicates firewall usage
-* **tcpwrapped services** → suggests access control mechanisms
+- Firewall interference
+- Network latency
+- Packet filtering
 
-This reflects a **moderately secured but still exposed system**.
-
----
-
-## 🎯 Attack Surface Summary
-
-* SSH → remote access vector
-* HTTP → web-based attack surface
-* Service versions → potential vulnerability entry points
-* Filtered ports → partial defensive controls
+👉 This is normal in real-world scenarios.
 
 ---
 
-# 🧠 Key Learnings
+🧪 NSE Vulnerability Scan
 
-* Network reconnaissance is not just scanning — it is **interpretation**
-* Service versions are critical for vulnerability identification
-* OS detection supports attack strategy development
-* NSE scripts enhance visibility into system behavior
-* Understanding port states reveals security posture
+nmap --script vuln scanme.nmap.org
+
+🎯 Purpose:
+
+- Automated vulnerability detection
+- Service-specific security checks
 
 ---
 
-# ⚠️ Disclaimer
+⚔️ Attack Scenario (Attack Path)
 
-This analysis was performed on an authorized target for educational purposes only. No unauthorized systems were accessed or exploited.
+1. Perform HTTP reconnaissance
+2. Enumerate directories
+3. Identify Apache vulnerabilities
+4. Attempt SSH brute-force or credential attacks
+5. Probe internal/hidden services (9929, 31337)
 
+👉 This reflects a realistic penetration testing workflow.
 
-## 📈 Skills Demonstrated
+---
+
+🛡️ Mitigation Recommendations
+
+SSH
+
+- Disable root login
+- Enforce key-based authentication
+- Implement Fail2Ban
+
+HTTP
+
+- Update Apache to latest version
+- Add security headers
+- Disable directory listing
+
+Network
+
+- Close unnecessary ports
+- Harden firewall rules
+
+---
+
+📊 Risk Assessment
+
+Service| Risk Level
+SSH| 🔴 High
+HTTP| 🔴 High
+SMTP| 🟡 Medium
+9929| 🟡 Medium
+31337| 🟡 Medium
+
+---
+
+🎯 Attack Surface Summary
+
+- SSH → remote access vector
+- HTTP → primary attack surface
+- Outdated services → exploit opportunities
+
+---
+
+🧠 Key Takeaways
+
+- Nmap output alone is not sufficient
+- Service versions are critical for vulnerability mapping
+- Enumeration is the most important phase of pentesting
+- Analysis is more valuable than raw data
+
+---
+
+⚠️ Legal Disclaimer
+
+This analysis was conducted strictly on an authorized target (scanme.nmap.org) for educational purposes only.
+No unauthorized access or exploitation was performed.
+
+---
+
+🚀 Skills Demonstrated
+
 - Network Scanning
 - Service Enumeration
-- OS Fingerprinting
-- Security Analysis
-- Attack Surface Identification
+- Vulnerability Analysis
+- CVE Mapping
+- Attack Surface Modeling
+- Threat-Oriented Thinking
+
+---
+
+⭐ Conclusion
+
+This project goes beyond simple scanning by answering key questions:
+
+- How can this system be attacked?
+- Where are the weakest points?
+- How can it be secured?
+
+It reflects a practical and analytical approach to real-world network security assessment.
