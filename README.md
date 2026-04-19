@@ -32,6 +32,50 @@ nmap --script vuln scanme.nmap.org
 
 ---
 
+📊 Full Nmap Scan Output (RAW)
+
+Starting Nmap 7.95 ( https://nmap.org ) at 2026-04-19 08:29 EDT
+
+Nmap scan report for scanme.nmap.org (45.33.32.156)
+Host is up (0.21s latency).
+Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
+
+Not shown: 995 closed tcp ports (reset)
+
+PORT      STATE    SERVICE    VERSION
+22/tcp    open     ssh        OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   1024 ac:00:a0:1a:82:ff:cc:55:99:dc:67:2b:34:97:6b:75 (DSA)
+|   2048 20:3d:2d:44:62:2a:b0:5a:9d:b5:b3:05:14:c2:a6:b2 (RSA)
+|   256 96:02:bb:5e:57:54:1c:4e:45:2f:56:4c:4a:24:b2:57 (ECDSA)
+|_  256 33:fa:91:0f:e0:e1:7b:1f:6d:05:a2:b0:f1:54:41:56 (ED25519)
+
+25/tcp    filtered smtp
+
+80/tcp    open     http       Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: Go ahead and ScanMe!
+|_http-favicon: Nmap Project
+
+9929/tcp  open     nping-echo
+
+31337/tcp open     tcpwrapped
+
+Aggressive OS guesses:
+  Linux 4.19 - 5.15 (97%)
+  Linux 4.15 (94%)
+  Linux 5.4 (93%)
+
+No exact OS matches for host (test conditions non-ideal).
+
+Network Distance: 24 hops
+
+Service Info: OS: Linux
+
+Nmap done: 1 IP address (1 host up) scanned in XX.XX seconds
+
+---
+
 📊 Scan Summary
 
 Port| State| Service| Version
@@ -52,7 +96,7 @@ Port| State| Service| Version
 - Network distance: 24 hops
 - OS guess: Linux (kernel 4.x – 5.x)
 
-👉 Insight: Likely hosted in a cloud-based infrastructure.
+👉 Insight: Likely hosted in a cloud infrastructure environment.
 
 ---
 
@@ -75,14 +119,14 @@ Service: OpenSSH 6.6.1 (Ubuntu)
 
 🔎 Relevant CVEs
 
-- CVE-2015-5600 → brute-force mitigation bypass
-- CVE-2016-6210 → user enumeration
+- CVE-2015-5600
+- CVE-2016-6210
 
 🎯 Attacker Perspective
 
-- Password brute-force using Hydra
+- Hydra brute-force attempts
 - Credential stuffing
-- Banner grabbing for fingerprinting
+- SSH banner fingerprinting
 
 ---
 
@@ -90,13 +134,13 @@ Service: OpenSSH 6.6.1 (Ubuntu)
 
 🧠 Analysis
 
-- Service exists but is filtered by firewall
-- External access restricted
+- Service exists but filtered
+- Likely protected by firewall
 
 🔐 Security Insight
 
-- Indicates defensive filtering
-- Internal relay or misconfiguration may still exist
+- Indicates network-level defense
+- Possible internal exposure
 
 ---
 
@@ -106,35 +150,27 @@ Service: Apache 2.4.7
 
 🧠 Analysis
 
-- Public-facing web server
-- Outdated version
+- Public web server
+- Outdated software
 
 🚨 Potential Vulnerabilities
 
 - Directory traversal
-- Misconfiguration issues
+- Misconfiguration
 - Information disclosure
 
 🔎 Relevant CVEs
 
 - CVE-2017-15715
-- CVE-2019-0211 (privilege escalation)
+- CVE-2019-0211
 
 ---
 
 🌐 Web Enumeration
 
-Tools Used:
-
 gobuster dir -u http://scanme.nmap.org -w /usr/share/wordlists/dirb/common.txt
 nikto -h http://scanme.nmap.org
 whatweb http://scanme.nmap.org
-
-🎯 Purpose:
-
-- Discover hidden directories
-- Identify technologies
-- Detect known vulnerabilities
 
 ---
 
@@ -142,13 +178,13 @@ whatweb http://scanme.nmap.org
 
 🧠 Analysis
 
-- Debugging/testing service
-- Rarely used in production
+- Debug/testing service
+- Uncommon in production
 
 🚨 Risk
 
 - Information leakage
-- Network mapping opportunities
+- Network probing abuse
 
 ---
 
@@ -156,29 +192,19 @@ whatweb http://scanme.nmap.org
 
 🧠 Analysis
 
-- Access is restricted or filtered
-- Service likely protected by access control
-
-🎯 Possibilities
-
-- Administrative service
-- Internal tool
-- Hidden backend service
+- Access-controlled service
+- Possibly hidden backend
 
 ---
 
 🧠 OS Detection Analysis
 
-- Linux kernel range: 4.x – 5.x
-- No exact match found
+- Linux (4.x – 5.x)
+- No exact match
 
-❗ Reasons
+❗ Reason
 
-- Firewall interference
-- Network latency
-- Packet filtering
-
-👉 This is normal in real-world scenarios.
+- Filtering & latency impact fingerprinting
 
 ---
 
@@ -186,22 +212,15 @@ whatweb http://scanme.nmap.org
 
 nmap --script vuln scanme.nmap.org
 
-🎯 Purpose:
-
-- Automated vulnerability detection
-- Service-specific security checks
-
 ---
 
 ⚔️ Attack Scenario (Attack Path)
 
-1. Perform HTTP reconnaissance
-2. Enumerate directories
-3. Identify Apache vulnerabilities
-4. Attempt SSH brute-force or credential attacks
-5. Probe internal/hidden services (9929, 31337)
-
-👉 This reflects a realistic penetration testing workflow.
+1. Web reconnaissance
+2. Directory brute-force
+3. Apache vulnerability research
+4. SSH attack attempts
+5. Internal service probing
 
 ---
 
@@ -210,19 +229,19 @@ nmap --script vuln scanme.nmap.org
 SSH
 
 - Disable root login
-- Enforce key-based authentication
-- Implement Fail2Ban
+- Use key-based authentication
+- Enable Fail2Ban
 
 HTTP
 
-- Update Apache to latest version
+- Update Apache
+- Harden configuration
 - Add security headers
-- Disable directory listing
 
 Network
 
 - Close unnecessary ports
-- Harden firewall rules
+- Restrict access via firewall
 
 ---
 
@@ -239,25 +258,23 @@ SMTP| 🟡 Medium
 
 🎯 Attack Surface Summary
 
-- SSH → remote access vector
+- SSH → access vector
 - HTTP → primary attack surface
-- Outdated services → exploit opportunities
+- Outdated services → exploit potential
 
 ---
 
 🧠 Key Takeaways
 
-- Nmap output alone is not sufficient
-- Service versions are critical for vulnerability mapping
-- Enumeration is the most important phase of pentesting
-- Analysis is more valuable than raw data
+- Enumeration is critical
+- Version detection enables vulnerability mapping
+- Analysis > raw scanning
 
 ---
 
 ⚠️ Legal Disclaimer
 
-This analysis was conducted strictly on an authorized target (scanme.nmap.org) for educational purposes only.
-No unauthorized access or exploitation was performed.
+This analysis was conducted only on an authorized target (scanme.nmap.org) for educational purposes.
 
 ---
 
@@ -268,16 +285,9 @@ No unauthorized access or exploitation was performed.
 - Vulnerability Analysis
 - CVE Mapping
 - Attack Surface Modeling
-- Threat-Oriented Thinking
 
 ---
 
 ⭐ Conclusion
 
-This project goes beyond simple scanning by answering key questions:
-
-- How can this system be attacked?
-- Where are the weakest points?
-- How can it be secured?
-
-It reflects a practical and analytical approach to real-world network security assessment.
+This project demonstrates a structured, real-world approach to network reconnaissance and security assessment, focusing on both technical accuracy and attacker mindset.
