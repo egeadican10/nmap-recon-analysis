@@ -31,17 +31,17 @@ Nmap scan report for scanme.nmap.org (45.33.32.156)
 Host is up (0.21s latency).
 Not shown: 995 closed tcp ports
 
-PORT STATE SERVICE VERSION
-22/tcp open ssh OpenSSH 6.6.1p1 Ubuntu
-25/tcp filtered smtp
-80/tcp open http Apache 2.4.7
-9929/tcp open nping-echo
-31337/tcp open tcpwrapped
+22/tcp - open - ssh - OpenSSH 6.6.1p1 Ubuntu
+25/tcp - filtered - smtp
+80/tcp - open - http - Apache 2.4.7
+9929/tcp - open - nping-echo
+31337/tcp - open - tcpwrapped
 
 OS: Linux 4.x - 5.x
 Network Distance: 24 hops
 
 Nmap done: 1 IP address (1 host up)
+
 ## 📊 Attack Surface Overview
 
 Externally Accessible Services:
