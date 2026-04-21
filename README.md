@@ -26,30 +26,26 @@ nmap --script vuln scanme.nmap.org
 
 ## 🖥️ LOG OUTPUT (RAW)
 
-"""
-[INFO] Nmap scan started
-[DATE] 2026-04-19 08:29 EDT
+Starting Nmap 7.95 ( https://nmap.org ) at 2026-04-19 08:29 EDT
+Nmap scan report for scanme.nmap.org (45.33.32.156)
+Host is up (0.21s latency).
+Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
+Not shown: 995 closed tcp ports (reset)
 
-[INFO] Target: scanme.nmap.org (45.33.32.156)
-[INFO] Host status: UP (0.21s latency)
+PORT      STATE    SERVICE     VERSION
+22/tcp    open     ssh         OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.13 (Ubuntu Linux; protocol 2.0)
+25/tcp    filtered smtp
+80/tcp    open     http        Apache httpd 2.4.7 ((Ubuntu))
+9929/tcp  open     nping-echo
+31337/tcp open     tcpwrapped
 
-[INFO] Starting port scan...
+OS guesses: Linux 4.19 - 5.15 (97%), Linux 4.15 (94%), Linux 5.4 (93%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 24 hops
 
-PORT      STATE      SERVICE       VERSION
----------------------------------------------
-22/tcp    open       ssh           OpenSSH 6.6.1p1 Ubuntu
-25/tcp    filtered   smtp          -
-80/tcp    open       http          Apache 2.4.7
-9929/tcp  open       nping-echo    -
-31337/tcp open       tcpwrapped    -
+Service Info: OS: Linux
 
-[INFO] OS Detection:
-Linux Kernel 4.x - 5.x (%97 accuracy)
-
-[INFO] Scan completed
-[SUMMARY] 1 host scanned | 995 ports closed
-"""
----
+Nmap done: 1 IP address (1 host up) scanned in XX.XX seconds
 
 ## 📊 Attack Surface Overview
 
