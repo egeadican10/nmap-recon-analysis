@@ -26,6 +26,7 @@ nmap --script vuln scanme.nmap.org
 
 ## 🖥️ LOG OUTPUT (RAW)
 
+"""
 [INFO] Nmap scan started
 [DATE] 2026-04-19 08:29 EDT
 
@@ -34,19 +35,20 @@ nmap --script vuln scanme.nmap.org
 
 [INFO] Starting port scan...
 
-PORT     STATE    SERVICE     VERSION
-22/tcp   open     ssh         OpenSSH 6.6.1p1 Ubuntu
-25/tcp   filtered smtp
-80/tcp   open     http        Apache 2.4.7
-9929/tcp open     nping-echo
-31337/tcp open    tcpwrapped
+PORT      STATE      SERVICE       VERSION
+---------------------------------------------
+22/tcp    open       ssh           OpenSSH 6.6.1p1 Ubuntu
+25/tcp    filtered   smtp          -
+80/tcp    open       http          Apache 2.4.7
+9929/tcp  open       nping-echo    -
+31337/tcp open       tcpwrapped    -
 
 [INFO] OS Detection:
 Linux Kernel 4.x - 5.x (%97 accuracy)
 
 [INFO] Scan completed
 [SUMMARY] 1 host scanned | 995 ports closed
-
+"""
 ---
 
 ## 📊 Attack Surface Overview
